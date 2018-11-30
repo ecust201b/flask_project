@@ -1,0 +1,110 @@
+{% extends "base1.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}故障记录{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'faultreport.css')}}">
+{% endblock %}
+
+{% block page_content %}
+<!-- Modal -->
+<div class="modal bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document" style="height: 80%">
+    <div class="modal-content" style="height: 100%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">故障时段传感器读数详情</h4>
+      </div>
+      <div class="modal-body">
+      	<div id="picture1" style="min-height: 500px;"></div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+<div class="reprot">
+
+	<div class="page-header">
+		<h1>设备运行报告</h1>
+	</div>
+	{{ wtf.quick_form(form, form_type="inline") }}
+	<div class="page-header">
+		<h3>设备信息</h3>
+	</div>
+	{{ wtf.quick_form(form1, form_type="inline") }}
+	<div class="page-header">
+		<h3>设备运行报告</h3>
+	</div>
+	<p class="lead"><strong>故障记录</strong></p>
+	<div class="table-responsive" style="height: 200px;">
+		<table class="table table-bordered table-hover" id="fault">
+			<thead>
+				<td><strong>序号</strong></td>
+				<td><strong>故障开始时间</strong></td>
+				<td><strong>故障结束时间</strong></td>
+				<td><strong>故障持续时间</strong></td>
+				<td><strong>故障原因</strong></td>
+				<td><strong>故障状态</strong></td>
+				<!--
+				<td><strong>故障开始时累积量读数</strong></td>
+				<td><strong>故障结束时累积量读数</strong></td>
+				<td><strong>故障开始时累积量(拟值)读数</strong></td>
+				<td><strong>故障结束时累积量(拟值)读数</strong></td>
+				-->
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-sm-6" id="picture2" style="min-height: 250px;"></div>
+		<div class="col-md-6 col-sm-6" id="picture3" style="min-height: 250px;"></div>
+	</div>
+	<p class="lead"><strong>操作记录</strong></p>
+	<div class="table-responsive" style="height: 200px;">
+		<table class="table table-bordered" id="operate">
+			<thead>
+				<td><strong>序号</strong></td>
+				<td><strong>操作时间</strong></td>
+				<td><strong>操作内容</strong></td>
+				<td><strong>标定误差</strong></td>
+				<td><strong>零点记录</strong></td>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+
+	<div class="page-header">
+		<h3>设备运行趋势</h3>
+	</div>
+	<div id="picture4" style="min-height: 250px;"></div>
+
+	<div class="page-header">
+		<h3>建议措施</h3>
+	</div>
+	<p class="lead"><strong>1.建议</strong></p>
+	<p class="lead"><strong>2.建议</strong></p>
+	<p class="lead"><strong>3.建议</strong></p>
+
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type=text/javascript src="{{ url_for('static', filename='echarts.common.min.js') }}"></script>
+<script type=text/javascript src="{{ url_for('static', filename='main/details.js') }}"></script> 
+
+{% endblock %}

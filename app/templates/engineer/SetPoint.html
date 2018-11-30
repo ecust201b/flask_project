@@ -1,0 +1,28 @@
+{% extends "base1.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "macro.html" as macro %}
+{% block title %}参数设置{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'engineer/SetPoint.css')}}">
+{% endblock %}
+
+{% block page_content %}
+
+<div class="container">
+  <div class="page-header">
+    <h2>传感器相关信息</h2>
+  </div>
+  <div class="col-md-12 col-sm-12 ">
+    {{ macro.embedded_form(form, form_type="inline") }}
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script type=text/javascript src="{{ url_for('static', filename='engineer/SetPoint.js') }}"></script> 
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base1.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}历史数据查看{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block page_content %}
+
+<div class="container">
+	<div class="page-header">
+		<h2>历史记录查询</h2>
+	</div>
+	
+		{{ wtf.quick_form(form, form_type="inline") }}
+	
+
+	<div class="page-header" style="margin-top:20px;">
+		<h2>操作记录查询结果</h2>
+	</div>
+	<div class="table-responsive" style="height: 200px;">
+		<table class="table table-bordered">
+			<thead>
+				<td><strong>序号</strong></td>
+				<td><strong>操作时间</strong></td>
+				<!-- <td><strong>操作内容</strong></td> -->
+				<td><strong>标定误差</strong></td>
+				<td><strong>零点记录</strong></td>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+
+  	<div class="page-header">
+		<h2>历史数据查询结果</h2>
+	</div>
+	<div class="col-md-12 col-sm-12">
+      <div class="col-md-12 col-sm-12" id="picture1" style="min-height: 500px;"></div>
+	</div>
+
+
+</div>
+
+<!--
+<div class="col-md-12 col-sm-12 main">
+  <div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="...">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default" id="diagnosis">智能诊断</button>
+    </div>
+  </div>
+	<div class="jumbotron">
+		<div class="container">
+      <h3 id="state">设备运行状态</h3>
+      <p id="notice">点击按钮启动智能诊断</p>
+      <div class="col-md-6 col-sm-6" id="picture1" style="min-height: 250px;"></div>
+      <div class="col-md-6 col-sm-6" id="picture2" style="min-height: 250px;"></div> 
+      <div class="col-md-6 col-sm-6" id="picture3" style="min-height: 250px;"></div>
+      <div class="col-md-6 col-sm-6" id="picture4" style="min-height: 250px;"></div>
+      <div class="col-md-6 col-sm-6" id="picture5" style="min-height: 250px;"></div>
+	</div>
+</div>
+-->
+
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type=text/javascript src="{{ url_for('static', filename='echarts.common.min.js') }}"></script>
+
+<script type=text/javascript src="{{ url_for('static', filename='engineer/history.js') }}"></script> 
+
+{% endblock %}

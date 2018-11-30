@@ -1,0 +1,141 @@
+{% extends "base1.html" %}
+{% block title %}运行界面{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'diagnosis.css')}}">
+<script type=text/javascript src="{{ url_for('static', filename='echarts.common.min.js') }}"></script> 
+{% endblock %}
+{% block navbar_button %}
+<!-- <li><a href="{{ url_for('main.setparam') }}">系统初值设置</a></li>
+<li><a href="{{ url_for('main.record') }}">系统运行记录</a></li> -->
+{% endblock %}
+{% block page_content %}
+
+<!-- Modal -->
+<div class="modal bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document" style="height: 80%">
+    <div class="modal-content" style="height: 100%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">传感器读数详情</h4>
+      </div>
+      <div class="modal-body">
+      	<div id="picture1" style="min-height: 500px;"></div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div class="page-header" style="margin-top: 10px;">
+    <h3>设备运行状态一览</h3>
+  </div>
+  <div class="row">
+    <div class="col-md-2 col-sm-2 weight">
+      <h2>当前质量：</h2>
+      <p class="text-right "><strong id="weight">10</strong>(kg)</p>
+    </div>
+    <div class="col-md-6 col-sm-6">
+    <div  id="picture5">
+      <table class="table table-bordered scale">
+        <tr class="tablerow">
+          <td class="4 val">
+            <p>Tag4:</p>
+            <p id="Tag4" class="text-right"><strong >10</strong>(kg)</p>
+          </td>
+          <td><img src="{{ url_for('static', filename = 'runningUI/uparrow.png')}}" class="center-block img1"></td>
+          <td class="1 val">
+            <p>Tag1:</p>
+            <p id="Tag1" class="text-right"><strong >10</strong>(kg)</p>
+          </td>
+        </tr>
+        <tr class="tablerow">
+          <td><img src="{{ url_for('static', filename = 'runningUI/rightarrow.png')}}" class="center-block img4"></td>
+          <td></td>
+          <td><img src="{{ url_for('static', filename = 'runningUI/leftarrow.png')}}" class="center-block img2"></td>
+        </tr>
+        <tr class="tablerow">
+          <td class="3 val">
+            <p>Tag3:</p>
+            <p id="Tag3" class="text-right"><strong >10</strong>(kg)</p>
+          </td>
+          <td><img src="{{ url_for('static', filename = 'runningUI/downarrow.png')}}" class="center-block img3"></td>
+          <td class="2 val">
+            <p>Tag2:</p>
+            <p id="Tag2" class="text-right"><strong >10</strong>(kg)</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+    </div>
+    <div class="col-md-4 col-sm-4" style="min-height: 310px;" id="picture2">
+    <!-- <h3>总运行时长：</h3>
+      <p class="text-right "><strong id="runtime">10</strong></p>
+    <h3>正常运行时长：</h3>
+      <p class="text-right "><strong id="normal">10</strong></p>
+    <h3>预警时长：</h3>
+      <p class="text-right"><strong id="alarm">10</strong></p>
+    <h3>故障时长：</h3>
+      <p class="text-right"><strong id="fault">10</strong></p> -->
+    </div>
+  </div>
+    <div class="page-header" style="margin-top: 10px;">
+      <h3>设备故障信息</h3>
+    </div>
+    <div class="table-responsive" style="height: 200px;">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <td><strong>序号</strong></td>
+          <td><strong>故障开始时间</strong></td>
+          <td><strong>故障结束时间</strong></td>
+          <td><strong>故障持续时间</strong></td>
+          <td><strong>故障原因</strong></td>
+          <td><strong>故障状态</strong></td>
+          <!--
+          <td><strong>故障开始时累积量读数</strong></td>
+          <td><strong>故障结束时累积量读数</strong></td>
+          <td><strong>故障开始时累积量(拟值)读数</strong></td>
+          <td><strong>故障结束时累积量(拟值)读数</strong></td>
+          -->
+        </thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+    </div>
+    <!-- <div class="col-md-3 col-sm-3 KPI">
+      <h3 class="inline">传感器1示数</h3>
+      <button class="light" data-toggle="popover" data-trigger="hover" title="故障信息" data-content="" data-placement="top" data-html="True"></button>
+      <p class="text-right clear"><strong id="Tag1">10</strong>(kg)</p>
+    </div>
+    <div class="col-md-3 col-sm-3 KPI">
+      <h3 class="inline">传感器2示数</h3>
+      <button class="light" data-toggle="popover" data-trigger="hover" title="故障信息" data-content="" data-placement="top" data-html="True"></button>
+      <p class="text-right"><strong id="Tag2">10</strong>(kg)</p>
+    </div>
+    <div class="col-md-3 col-sm-3 KPI">
+      <h3 class="inline">传感器3示数</h3>
+      <button class="light" data-toggle="popover" data-trigger="hover" title="故障信息" data-content="" data-placement="top" data-html="True"></button>
+      <p class="text-right"><strong id="Tag3">10</strong>(kg)</p>
+    </div>
+    <div class="col-md-3 col-sm-3 KPI">
+      <h3 class="inline">传感器4示数</h3>
+      <button class="light" data-toggle="popover" data-trigger="hover" title="故障信息" data-content="" data-placement="top" data-html="True"></button>
+      <p class="text-right"><strong id="Tag4">10</strong>(kg)</p>
+    </div> -->
+  </div>
+</div>
+  
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type=text/javascript src="{{ url_for('static', filename='echarts.common.min.js') }}"></script>
+<script type=text/javascript src="{{ url_for('static', filename='runningUI/RunningUI.js') }}"></script> 
+<script type=text/javascript src="{{ url_for('static', filename='runningUI/picture.js') }}"></script> 
+{% endblock %}

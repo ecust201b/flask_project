@@ -1,0 +1,80 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}XR{% endblock %}
+
+{% block head %}
+{{ super() }}
+
+{% endblock %}
+
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle-navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">
+		        <img alt="Brand" src="{{ url_for('static', filename='siemens_logo.jpg') }}" style="width: auto; height: auto; max-width: 100%; max-height: 100%;">
+		      </a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				{% if current_user.is_authenticated and current_user.role.RID == 2 %}
+					<li><a href="{{ url_for('main.Running') }}">运行界面</a></li>
+				{% elif current_user.is_authenticated and current_user.role.RID == 1 %}
+			        <li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">工程师界面 <span class="caret"></span></a>
+			          <ul class="dropdown-menu">
+			            <li><a href="{{ url_for('engineer.create_eqp') }}">初值设定</a></li>
+			            <li><a href="{{ url_for('engineer.faultreport') }}">故障报告</a></li>
+			            <li><a href="{{ url_for('engineer.operaterecord') }}">操作记录</a></li>
+			            <li><a href="{{ url_for('engineer.history') }}">历史趋势</a></li>
+			          </ul>
+					</li>
+					<li><a href="{{ url_for('user.manage') }}">人员管理</a></li>
+		        {% elif current_user.is_authenticated and current_user.role.RID == 0 %}
+		        	<li><a href="{{ url_for('report.details') }}">运行报告</a></li>
+		        	<li><a href="{{ url_for('report.devReports') }}">检验报告</a></li>
+		        	<li><a href="{{ url_for('user.manage') }}">人员管理</a></li>
+		        {% endif %}
+			</ul>
+
+
+			<ul class="nav navbar-nav navbar-right">
+				{% if current_user.is_authenticated %}
+				<li><p class="navbar-text">{{ current_user.UID }},您好</p></li>
+				<li>
+					<a href="{{ url_for('user.logout') }}">登出</a>
+				</li>
+				<li><a href="{{ url_for('main.index') }}">返回主页</a></li>
+				{% else %}
+				<li><a href="{{ url_for('user.login') }}">登录</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+	{% block flash%}
+		<div class="container-fluid">
+			{% for message in get_flashed_messages() %}
+				<div class="alert alert-warning">
+					{{ message }}
+				</div>
+		</div>
+	    {% endfor %}
+    {% endblock %}
+	{% block page_content %}{% endblock %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}
