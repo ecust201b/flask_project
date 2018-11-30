@@ -1,0 +1,40 @@
+{% extends "base1.html" %}
+{% block title %}用户注册{% endblock %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+<div class="container">
+	<div class="page-header">
+		<h1>用户管理</h1>
+	</div>
+	<table class="table table-bordered table-hover">
+		<thead>
+			<td><strong>用户名</strong></td>
+			<td><strong>用户等级</strong></td>
+			<td><strong>监控设备</strong></td>
+			<!--
+			<td><strong>故障开始时累积量(拟值)读数</strong></td>
+			<td><strong>故障结束时累积量(拟值)读数</strong></td>
+			-->
+		</thead>
+		{% for user in UserList %}
+		<tr>
+			<td>{{ user.UID }}</td>
+			<td>{{ user.role.name }}</td>
+			<td>
+				{% if user.eqp_list %}
+					{% for eqp in user.eqp_list %}
+						{{ eqp }} 
+					{% endfor %}
+				{% else %}
+					无可操作设备
+				{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type=text/javascript src="{{ url_for('static', filename='register/manage.js') }}"></script> 
+{% endblock %}

@@ -1,0 +1,77 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% macro embedded_form(form,
+                    action="",
+                    method="post",
+                    extra_classes=None,
+                    role="form",
+                    form_type="basic",
+                    horizontal_columns=('lg', 2, 10),
+                    button_map={},
+                    id="",
+                    novalidate=False) %}
+<form
+{%- if action != None %} action="{{action}}"{% endif -%}
+{%- if id %} id="{{id}}"{% endif -%}
+{%- if method %} method="{{method}}"{% endif %}
+class="form
+    {%- if extra_classes %} {{extra_classes}}{% endif -%}
+    {%- if form_type == "horizontal" %} form-horizontal
+    {%- elif form_type == "inline" %} form-inline
+    {%- endif -%}
+"
+{%- if role %} role="{{role}}"{% endif -%}
+{%- if novalidate %} novalidate{% endif -%}
+>
+{{ form.hidden_tag() }}
+{{ wtf.form_errors(form, hiddens='only') }}
+
+{%- for field in form %}
+    {% if not bootstrap_is_hidden_field(field) -%}
+        {%- if field.type != 'FieldList' -%}
+            {{ wtf.form_field(field,
+                            form_type=form_type,
+                            horizontal_columns=horizontal_columns,
+                            button_map=button_map) }}
+        {%- else -%}
+            <div data-toggle="fieldset" id="sencer-fieldset" class="container-fluid">
+                {{ field.label }}: <button type="button" data-toggle="fieldset-add-row" data-target="#sencer-fieldset" class="btn btn-default">添加</button>
+                <table class="table table-bordered">
+                    <thead>
+                        <th>位号</th>
+                        <th>标定读数(mV)</th>
+                        <th>零点</th>
+                        <th>无负载读数(mV)</th>
+                        <th>空载读数(mV)</th>
+                        <th>激励电压(mV)</th>
+                        <th>灵敏度(mV/V)</th>
+                        <th>传感器阻抗(Ω)</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        {% for sencer in field %}
+                            <tr data-toggle="fieldset-entry">
+                                {{sencer.csrf_token}}
+                                <td>{{ sencer.sencer_name }}</td>
+                                <td>{{ sencer.standard_load }}</td>
+                                <td>{{ sencer.zero_point }}</td>
+                                <td>{{ sencer.no_load }}</td>
+                                <td>{{ sencer.empty_load }}</td>
+                                <td>{{ sencer.exec_v }}</td>
+                                <td>{{ sencer.sensitivity }}</td>
+                                <td>{{ sencer.resistance }}</td>
+                                <td><button type="button" data-toggle="fieldset-remove-row" id="sencer-{{loop.index0}}-remove" class="btn btn-default">删除</button></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+            </div>
+        {%- endif -%}
+    {%- endif %}
+{%- endfor %}
+
+</form>
+{%- endmacro %}
+
+

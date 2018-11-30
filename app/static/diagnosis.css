@@ -1,0 +1,87 @@
+.time{
+	display: none;
+}
+input{
+	background-color:transparent;
+	border: 0px;
+}
+
+p,label,input{
+    font-size: 20px;
+}
+p.navbar-text{
+    font-size: 14px;
+}
+.inline{
+    display: inline-block;
+}
+.clear{
+    clear: both;
+}
+.main{
+	padding-top: 20px;
+}
+.padding.jumbotron{
+	padding-top: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+.col-md-offset-4{
+	margin-bottom: 20px;
+}
+.KPI{
+	border-radius: 15px;
+	border:1px solid#C0C0C0;background-color:#DBEAFF;
+    -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0,0.5);
+    -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0,0.5);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+.title_box{
+    border-radius: 15px;
+    border:1px solid#C0C0C0;background-color:#DBEAFF;
+    -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0,0.5);
+    -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0,0.5);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+.light{
+    float: right;
+    height: 50px;
+    width: 50px;
+    -webkit-webkit-border-radius: 50%;
+    -moz-webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: green;
+}
+.alarm{
+    background: yellow;
+}
+.fault{  
+    -webkit-animation: twinkling 1s infinite ease-in-out;
+    background: red;
+}  
+.animated{  
+    -webkit-animation-duration: 1s;  
+    animation-duration: 1s;  
+    -webkit-animation-fill-mode: both;  
+    animation-fill-mode: both  
+}  
+@-webkit-keyframes twinkling{  
+    0%{  
+        opacity: 0;  
+    }  
+    100%{  
+        opacity: 1;  
+    }  
+}  
+@keyframes twinkling{  
+    0%{  
+        opacity: 0;  
+    }  
+    100%{  
+        opacity: 1;  
+    }  
+}
+
+.scale{
+    background-color: #c5a996;
+}

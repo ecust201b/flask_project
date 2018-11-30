@@ -1,0 +1,20 @@
+{% extends "base1.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}登录页面{% endblock %}
+{% block page_content %}
+<div class="container">
+	<div class="page-header">
+		<h1>用户登录</h1>
+	</div>
+
+	<div class="login-banner col-sm-6 col-md-6 col-lg-6 hidden-xs">
+		<img src="{{ url_for('static', filename='ECUST.jpg') }}" style="width: 50%; height: auto; max-width: 100%; max-height: 50%;" class="center-block" />
+	</div>
+	<div class="col-md-4 col-lg-4">
+		{{ wtf.quick_form(form) }}
+		<p><a href="{{ url_for('user.register') }}">点击注册</a></p>
+	</div>
+</div>
+	
+
+{% endblock %}
