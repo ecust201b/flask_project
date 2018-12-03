@@ -46,4 +46,4 @@ class UserEdit(Form):
     def __init__(self, current_user, *args, **kwargs):
         super(UserEdit, self).__init__(*args, **kwargs)
         self.role.choices = [(role.RID, role.name) for role in Role.objects.order_by("+RID")]
-        self.eqp_list.choices = [(e.EID, e.EID) for e in eqp_find(current_user)]
+        self.eqp_list.choices = [(e.EID, e.EID) for e in eqp_find(current_user.factory.FID)]

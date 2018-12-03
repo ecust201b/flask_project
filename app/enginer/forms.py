@@ -33,7 +33,7 @@ class SetForm(Form):
     num = StringField('传感器数量：', validators=[Required()])
     temperature = StringField('记录时环境温度(℃)：', validators=[Required()])
     wet = StringField('记录时环境湿度(%)：', validators=[Required()])
-    sencer_info = FieldList(FormField(SencerFormNoCsrf), min_entries=1)
+    sencer_info = FieldList(FormField(SencerFormNoCsrf))
     submit = SubmitField('提交信息')
 
     def __init__(self, *args, **kwargs):
@@ -49,9 +49,9 @@ class OperationForm(Form):
     zero = StringField('操作时零点值：', validators=[Required()], render_kw={"placeholder": ""})
     submit = SubmitField('提交信息')
 
-    def __init__(self, current_user, *args, **kwargs):
+    def __init__(self, FID, *args, **kwargs):
         super(OperationForm, self).__init__(*args, **kwargs)
-        self.eqp.choices = [(e.EID, e.EID) for e in eqp_find(current_user)]
+        self.eqp.choices = [(e.EID, e.EID) for e in eqp_find(FID)]
 
 
 class HistoryForm(Form):
@@ -60,6 +60,6 @@ class HistoryForm(Form):
     eqp = SelectField('设备号', coerce=str)
     submit = SubmitField('查询')
 
-    def __init__(self, current_user, *args, **kwargs):
+    def __init__(self, FID, *args, **kwargs):
         super(HistoryForm, self).__init__(*args, **kwargs)
-        self.eqp.choices = [(e.EID, e.EID) for e in eqp_find(current_user)]
+        self.eqp.choices = [(e.EID, e.EID) for e in eqp_find(FID)]
