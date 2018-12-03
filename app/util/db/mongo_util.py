@@ -3,10 +3,10 @@
 from pymongo import MongoClient
 
 def delete_collection(key_word):
-    mongo_client = MongoClient(host='localhost', port=27017, username='siemens', password='siemens')
-    db = mongo_client['weighting']
+    client = MongoClient("mongodb://siemens:siemens@127.0.0.1:27017/weighting")
+    db = client['weighting']
     collection_names = db.collection_names()
     for collection in collection_names:
         if key_word in collection:
             db.drop_collection(collection)
-    mongo_client.close()
+    client.close()

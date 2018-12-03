@@ -115,7 +115,7 @@ vim wsgi.py
 粘贴以下代码:
 
 ```python
-from myproject import app
+from test import app
 
 if __name__ == "__main__":
     app.run()
@@ -141,8 +141,10 @@ wsgi-file = wsgi.py
 callable = app
 # 处理器数
 processes = 5
-# 线程数
-threads = 2
+# 线程数,使用 gevent 不能开线程
+# threads = 2
+# gevent 数量
+gevent = 10
 #状态检测地址
 stats = 127.0.0.1:9191
 ```

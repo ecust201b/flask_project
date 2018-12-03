@@ -5,7 +5,6 @@ from flask_login import login_required, current_user
 from flask import render_template, session, redirect, url_for, flash, abort, request, jsonify
 from . import main
 from .. import db
-# from ..models import Equipment, FaultMsg, NewVal, FaultList
 from ..models import Eqp
 from ..util.db.mongo import mongo_service
 

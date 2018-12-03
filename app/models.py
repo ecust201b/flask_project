@@ -5,7 +5,6 @@ import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import login_manager
-from flask import current_app
 
 
 # 记载用户的回调函数
@@ -41,17 +40,29 @@ class Supplier(db.Document):
     meta = {'indexes': [('SID', 'contact')]}
 
 
+# 每个工厂一张，命名：FID + eqp
 class EqpSup(db.EmbeddedDocument):
     SID = db.StringField(max_length=20)
     contact = db.StringField(max_length=20)
 
+class SencerInfo(db.EmbeddedDocument):
+    sencer_name = db.StringField(max_length=20)
+    no_load_set = db.FloatField()
+    empty_load_set = db.FloatField()
+    exec_v = db.FloatField()
+    sensitivity = db.FloatField()
+    resistance = db.FloatField()
 
-# 每个工厂一张，命名：FID + eqp
 class Eqp(db.Document):
     EID = db.StringField(max_length=20, unique=True)
     place = db.StringField(max_length=20)
     supplier = db.EmbeddedDocumentField(EqpSup)
-    meta = {'indexes': ['EID']}
+    timestamp = db.DateTimeField(default=datetime.datetime.utcnow, required=True)
+    sencer_num = db.IntField()
+    sencer_info = db.ListField(db.EmbeddedDocumentField(SencerInfo))
+    temperature = db.FloatField()
+    wet = db.FloatField()
+    meta = {'indexes': ['EID', 'timestamp']}
 
 
 class User(UserMixin, db.Document):
@@ -75,26 +86,6 @@ class User(UserMixin, db.Document):
 
     def __repr__(self):
         return '<User %r>' % self.username
-
-
-# 每个设备一张，命名：FID + EID + eqpinfo
-
-class SencerInfo(db.EmbeddedDocument):
-    sencer_name = db.StringField(max_length=20)
-    no_load_set = db.FloatField()
-    empty_load_set = db.FloatField()
-    exec_v = db.FloatField()
-    sensitivity = db.FloatField()
-    resistance = db.FloatField()
-
-
-class EqpInfo(db.Document):
-    timestamp = db.DateTimeField(default=datetime.datetime.utcnow, required=True)
-    sencer_num = db.IntField()
-    sencer_info = db.ListField(db.EmbeddedDocumentField(SencerInfo))
-    temperature = db.FloatField()
-    wet = db.FloatField()
-    meta = {'indexes': ['timestamp']}
 
 
 # 每个设备一张，命名：FID + EID + thread
