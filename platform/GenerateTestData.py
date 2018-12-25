@@ -8,12 +8,12 @@ from influxdb import InfluxDBClient
 from datetime import datetime, timedelta
 import re
 from socket import socket, AF_INET, SOCK_STREAM
-from log import log
+from flask_project.platform.log import log
 
 
-class sever(object):
+class GenerateDataSever(object):
     def __init__(self, influx_client, FID='ecust01', EID='scale01', logPath="..\log\Log_GenerateDataSever.txt"):
-        super(sever, self).__init__()
+        super(GenerateDataSever, self).__init__()
         self.BUFSIZ = 2048
         self.ADDR = ('', 1123)
         self.sock = socket(AF_INET, SOCK_STREAM)
@@ -82,7 +82,7 @@ class sever(object):
 
 if __name__ == "__main__":
     influx_client = InfluxDBClient('localhost', 8086, 'ecust', '123456', 'PlatformScale')
-    newSever = sever(influx_client)
+    newSever = GenerateDataSever(influx_client)
     while True:
         try:
             newSever.ReadVal()

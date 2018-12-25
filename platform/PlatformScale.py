@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 '''
-平台秤类V4_5
-
-修改日志：
-
-· 在V4_5基础上加入logging，去除一些print输出
-
 #####################################################################################
 ======================================
 针对4个传感器
@@ -48,10 +42,10 @@ import time
 import os
 import re
 import gc
-from ..app.util.db.mongo import mongo_service
-from mongoengine import *
-from MongoCollection import MongoFaultCollection
-from log import log
+from mongoengine import connect
+from flask_project.app.util.db.mongo import mongo_service
+from flask_project.platform.MongoCollection import MongoFaultCollection
+from flask_project.platform.log import log
 
 
 class PlatformScale(object):
@@ -77,7 +71,7 @@ class PlatformScale(object):
         self.GRModelPath_134To5 = GRModelPath_134To5
         self.GRModelPath_234To5 = GRModelPath_234To5
 
-        self.flagDict = {}
+        self.flagDict = dict()
         self.flagDict["partialLoadFlag"] = 0  # 偏载标志位
         self.flagDict["SensorTag1"] = 0  # 传感器1号的状态
         self.flagDict["SensorTag2"] = 0  # 传感器2号的状态
@@ -160,39 +154,32 @@ class PlatformScale(object):
         else:
             pass
 
-        # 123To5 与其他明显不同，说明传感器4读数有问题
         if ((abs(Pred_123To5 - Pred_124To5) > threshold)
             and (abs(Pred_123To5 - Pred_134To5) > threshold)
             and (abs(Pred_123To5 - Pred_234To5) > threshold)):
             self.flagDict["SensorTag4"] = 3
-            self.flagDict["EQP_State"] = 2  # 设备有2级问题
+            self.flagDict["EQP_State"] = 2
             # print('No.4 Sensor Maybe Failure!')
-            return Pred_123To5  # 将预测值返回
-
-        # 124To5 与其他明显不同，说明传感器3读数有问题
+            return Pred_123To5
         elif ((abs(Pred_124To5 - Pred_123To5) > threshold)
               and (abs(Pred_124To5 - Pred_134To5) > threshold)
               and (abs(Pred_124To5 - Pred_234To5) > threshold)):
             self.flagDict["SensorTag3"] = 3
-            self.flagDict["EQP_State"] = 2  # 设备有2级问题
+            self.flagDict["EQP_State"] = 2
             # print('No.3 Sensor Maybe Failure!')
             return Pred_124To5
-
-        # 134To5 与其他明显不同，说明传感器2读数有问题
         elif ((abs(Pred_134To5 - Pred_123To5) > threshold)
               and (abs(Pred_134To5 - Pred_124To5) > threshold)
               and (abs(Pred_134To5 - Pred_234To5) > threshold)):
             self.flagDict["SensorTag2"] = 3
-            self.flagDict["EQP_State"] = 2  # 设备有2级问题
+            self.flagDict["EQP_State"] = 2
             # print('No.2 Sensor Maybe Failure!')
             return Pred_134To5
-
-        # 234To5 与其他明显不同，说明传感器1读数有问题
         elif ((abs(Pred_234To5 - Pred_123To5) > threshold)
               and (abs(Pred_234To5 - Pred_124To5) > threshold)
               and (abs(Pred_234To5 - Pred_134To5) > threshold)):
             self.flagDict["SensorTag1"] = 3
-            self.flagDict["EQP_State"] = 2  # 设备有2级问题
+            self.flagDict["EQP_State"] = 2
             # print('No.1 Sensor Maybe Failure!')
             return Pred_234To5
         else:
@@ -226,25 +213,20 @@ class PlatformScale(object):
         Pred2 = self.Predict(W1, W3, W4, ModelPath=self.GRModelPath_134To2)
         Pred1 = self.Predict(W2, W3, W4, ModelPath=self.GRModelPath_234To1)
 
-        # 当3号或4号的实际值明显比预测值重 -> 左倾
+        # -> 左倾
         if ((W4 - Pred4 > threshold_To4) and (W3 - Pred3 > threshold_To3)):
             self.flagDict["partialLoadFlag"] = 1
-            # print("<<<<<---...Left!")
-        # 当1号或2号的实际值比预测值重  -> 右倾
+        # -> 右倾
         elif ((W1 - Pred1 > threshold_To1) and (W2 - Pred2 > threshold_To2)):
             self.flagDict["partialLoadFlag"] = 3
-            # print("--->>>>>...Right!")
-        # 当1号或4号的实际值比预测值重   -> 前侧
+        # -> 前侧
         elif ((W1 - Pred1 > threshold_To1) and (W4 - Pred4 > threshold_To4)):
             self.flagDict["partialLoadFlag"] = 4
-            # print("↑↑↑↑↑↑↑↑...Forward!")
-        # 当2号或3号的实际值比预测值重  -> 后仰
+        # -> 后仰
         elif ((W2 - Pred2 > threshold_To2) and (W3 - Pred3 > threshold_To3)):
             self.flagDict["partialLoadFlag"] = 2
-            # print("↓↓↓↓↓↓↓↓...Back!")
         else:
             self.flagDict["partialLoadFlag"] = 0
-            # print("Center")
 
         if self.flagDict['EQP_State'] == 0:
             self.flagDict['Normal'] = 1
@@ -286,7 +268,7 @@ class PlatformScaleSever(object):
 
         while True:
             startTime = datetime.now()
-            # =============================这获取数据部分要更改为influxdb=========================
+
             utcNow = datetime.utcnow()
             Previous = utcNow - timedelta(seconds=5)
             Now = utcNow.strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -294,11 +276,11 @@ class PlatformScaleSever(object):
 
             measurementName = self.FID + "_" + self.EID + "_Val"  # 从此处读取数据
 
-            # ===========================此处Query语句还有问题
             # 获取最新的5秒的数据
-            getDataQuery = "SELECT * FROM " + measurementName + " WHERE time >= '" + Previous + "' and time <='" + Now + "'"
+            getDataQuery = "SELECT * FROM " + measurementName \
+                           + " WHERE time >= '" + Previous + "' and time <='" + Now + "'"
 
-            SensorNum = 0  # 传感器数量到时候查eqp的collection,有传感器数量---------------------
+            SensorNum = 0  # 传感器数量初始化
             Weight1List, Weight2List, Weight3List, Weight4List = [], [], [], []
 
             # 发送请求并获取数据生成器
@@ -316,8 +298,8 @@ class PlatformScaleSever(object):
             readErrorFlag = 0
             for item in res.get_points():
                 '''================ 视情况这里要改！=============='''
-                SensorNum = len(item) - 2  # 表中有(时间，传感器，总)；故 (长度-时间-总) 即为传感器数量 # ======================!
-                if (SensorNum == 4):
+                SensorNum = len(item) - 2  # 表中有(时间，传感器，总)；故 (长度-时间-总) 即为传感器数量
+                if SensorNum == 4:
                     if isinstance(item['WeightTag1'], (float, int)):
                         Weight1List.append(item['WeightTag1'])
                     else:
@@ -334,7 +316,6 @@ class PlatformScaleSever(object):
                         Weight3List.append(item['WeightTag3'])
                     else:
                         readErrorFlag = 1
-                        # print(item['WeightTag3'])
                         self.logger.warning("Read Error! WeightTag3: " + str(item['WeightTag3']))
                         break
                     if isinstance(item['WeightTag4'], (float, int)):
@@ -422,8 +403,6 @@ class PlatformScaleSever(object):
                             MG_Service.create_obj(FaultTime=utcNow, FaultSensor=SensorTag,
                                                   FaultCode=FlagDict[SensorTag], EQP_State=FlagDict['EQP_State'])
 
-
-
                 endTime = datetime.now()
                 UseTime = (endTime - startTime).total_seconds()
                 # print("Using time:", UseTime)
@@ -441,6 +420,3 @@ if __name__ == '__main__':
             newSever.Run()
         except:
             continue
-
-
-

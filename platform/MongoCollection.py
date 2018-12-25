@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..app.util.db.mongo import mongo_service
-from mongoengine import *
+from mongoengine import Document, DateTimeField, IntField, StringField
 
 class MongoFaultCollection(Document):
     FaultTime = DateTimeField()  # 故障时间
